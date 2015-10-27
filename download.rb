@@ -3,9 +3,6 @@ require "bundler"
 Bundler.require(:default, ENV["RACK_ENV"] || :development)
 require 'fileutils'
 
-ACCESS_KEY_ID = "AKIAJXUQJGETN7NZQNDA"
-SECRET_ACCESS_KEY = "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"
-
 def percentile(values, percentile)
 
   raise "Percentile must be < 1." if percentile > 1
@@ -30,7 +27,7 @@ prefix = "web-railsapp-production/AWSLogs/894935469341/elasticloadbalancing/us-e
 format = '%t %{ELB}n %a:{remote}p %A:{local}p %{request_processing_time}n %{backend_processing_time}n %{response_processing_time}n %{elb_status_code}n %{backend_status_code}n %{received_bytes}n %{sent_bytes}n \"%r\" \"%{User-Agent}i\" - -'
 parser = ApacheLogRegex.new(format)
 
-service = Fog::Storage.new({:provider => 'AWS', :aws_access_key_id => ACCESS_KEY_ID, :aws_secret_access_key => SECRET_ACCESS_KEY})
+service = Fog::Storage.new({:provider => 'AWS', :aws_access_key_id => ENV['AWS_ACCESS_KEY_ID'], :aws_secret_access_key => ENV['AWS_SECRET_ACCESS_KEY']})
 
 dir = service.directories.get("littlebits-logs")
 files = Fog::Storage::AWS::Files.new(directory: dir, service: service, prefix: prefix, max_keys: 10000)
